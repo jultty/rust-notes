@@ -4,6 +4,8 @@ This document consists of notes taken while reading the book [The Rust Programmi
 
 ## Syntax
 
+### Assignments
+
 #### Types
 
 A variable's type can be inferred or it can be defined as having a certain type.
@@ -76,7 +78,7 @@ println!("{}", s);
     foo
 
 
-#### `new`
+##### `new`
 
 The `new` in `let s = String::new();` is a function that returns a new **instance** of a String.
 
@@ -85,6 +87,8 @@ The `::` indicates `new` is an _associated function_  of the `String` type.
 > An _associated function_ is a function that’s implemented on a type, in this case `String`.
 
 -- The Rust Programming Language, Chapter 2: _Programming a Guessing Game_
+
+### Control flow
 
 #### Functions
 
@@ -97,7 +101,84 @@ fn main() {
 
 A function named `main` has special meaning and will be picked up as the entry point.
 
-#### Ranges
+#### `loop`
+
+The `loop` keyword will loop infinitely:
+
+
+```Rust
+let mut n = 0;
+
+loop {
+    println!("Looping: {n}");
+
+    if n > 2 {
+        break;
+    }
+
+    n += 1;
+}
+```
+
+    Looping: 0
+    Looping: 1
+    Looping: 2
+    Looping: 3
+
+
+
+
+
+    ()
+
+
+
+It can be stopped with a `break`.
+
+#### `match`
+
+`match` expressions allow taking different courses of action depending on a given match. Each possibility is referred to as an "arm". A `_` character acts as a catch-all when matching. 
+
+Chapter 2 gives the following example when building the guessing game:
+
+
+```Rust
+use std::cmp::Ordering;
+
+let guess = 5;
+let secret_number = 8;
+
+match guess.cmp(&secret_number) {
+    Ordering::Less => println!("Too small!"),
+    Ordering::Greater => println!("Too big!"),
+    Ordering::Equal => println!("You win!"),
+}
+```
+
+    Too small!
+
+
+
+
+
+    ()
+
+
+
+Here, `std::cmp::Ordering` is an enum, and the `cmp` method on the `guess` integer returns a variant of this enum. This allows them to be matched in the match expression above.
+
+A an expression, `match` can also returns values:
+
+```rust
+let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => continue,
+};
+```
+
+The example above, shown in Chapter 2, runs inside a loop. The `Ok(num)` arm takes the value returned by `parse` and returns it. The `Err(_)` arm simply continues to the next iteration.
+
+### Ranges
 
 Ranges are defined using `start..end` notation.
 
@@ -144,7 +225,7 @@ for i in 1..=3 {
 
 For a more exhaustive listing, see [The Rust Reference: Range expressions](https://doc.rust-lang.org/1.79.0/reference/expressions/range-expr.html).
 
-#### Macros
+### Macros
 
 Macros typically end with a `!` as in `println!()`.
 
@@ -170,43 +251,13 @@ println!("{}", (3 + 3) / 2 == 3);
     true
 
 
-#### References
+### References
 
 The `&` in `read_line(&mut input)` is a **reference**.
 
 The Book describes references as _"a way to let multiple parts of your code access one piece of data without needing to copy that data into memory multiple times."_ (Chapter 2)
 
 References are also immutable by default. A mutable reference is defined as `&mut reference_name`.
-
-### `match`
-
-Chapter 2 gives the following example when building the guessing game:
-
-
-```Rust
-use std::cmp::Ordering;
-
-let guess = 5;
-let secret_number = 8;
-
-match guess.cmp(&secret_number) {
-    Ordering::Less => println!("Too small!"),
-    Ordering::Greater => println!("Too big!"),
-    Ordering::Equal => println!("You win!"),
-}
-```
-
-    Too small!
-
-
-
-
-
-    ()
-
-
-
-Here, `std::cmp::Ordering` is an enum, and the `cmp` method on the `guess` integer returns a variant of this enum. This allows them to be matched in the match expression above.
 
 ## Types
 
